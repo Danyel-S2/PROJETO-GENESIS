@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Basquete Funcional</title>
+  <style>
+    body {
+      background: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    canvas {
+      border: 3px solid white;
+      background: #222;
+    }
+
+    #placar {
+      margin-top: 15px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo de Basquete em JS Funcional</h1>
+  <canvas id="jogo" width="500" height="500"></canvas>
+  <div id="placar">Pontos: 0</div>
+
+  <script src="jogo.js"></script>
+</body>
+</html>
