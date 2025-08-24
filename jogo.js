@@ -37,18 +37,18 @@ const desenhar = (contexto, estado) => {
   // -------------Placar de pontos---------------
   placar.textContent = "Pontos: " + estado.pontos
 }
-const atualizar = (estado) => {
-  if (!estado.bola.lancada) return estado;
-
-  let novaY = estado.bola.y + estado.bola.velocidade;
-  let novaVy = estado.bola.velocidade + 0.5; // gravidade
-
-  // verificar se  a bola passou pela cesta
-  const dentroCesta =
-    estado.bola.x > estado.cesta.x &&
-    estado.bola.x < estado.cesta.x + estado.cesta.largura &&
-    estado.bola.y < estado.cesta.y + estado.cesta.altura &&
-    estado.bola.y > estado.cesta.y - estado.bola.raio;
+function atualizar(estado) {
+  // movimento da cesta de um lado pro outro
+  let novaX = estado.cesta.x + estado.cesta.vx
+  let novoVx = estado.cesta.vx
+  if (novaX + estado.cesta.w > canvas.width) {
+    novaX = canvas.width - estado.cesta.w
+    novoVx *= -1
+  }
+  if (novaX < 0) {
+    novaX = 0
+    novoVx *= -1
+  }
 
   if (dentroCesta) {
     return {
