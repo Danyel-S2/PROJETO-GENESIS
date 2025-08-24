@@ -38,7 +38,7 @@ const desenhar = (contexto, estado) => {
   placar.textContent = "Pontos: " + estado.pontos
 }
 function atualizar(estado) {
-  // movimento da cesta de um lado pro outro
+  // movimento da cesta
   let novaX = estado.cesta.x + estado.cesta.vx
   let novoVx = estado.cesta.vx
   if (novaX + estado.cesta.w > canvas.width) {
@@ -46,11 +46,6 @@ function atualizar(estado) {
     novoVx *= -1
   }
   if (novaX < 0) {
-    novaX = 0
-    novoVx *= -1
-  }
-
- if (novaX < 0) {
     novaX = 0
     novoVx *= -1
   }
@@ -70,7 +65,8 @@ function atualizar(estado) {
     estado.bola.x < estado.cesta.x + estado.cesta.w &&
     estado.bola.y < estado.cesta.y + estado.cesta.h &&
     estado.bola.y > estado.cesta.y - estado.bola.r
-if (dentroCesta) {
+
+  if (dentroCesta) {
     return {
       ...estado,
       cesta: { ...estado.cesta, x: novaX, vx: novoVx },
@@ -78,7 +74,6 @@ if (dentroCesta) {
       pontos: estado.pontos + 1
     }
   }
-
   // A bola voltou pro chão
   if (novaY > 460) {
     return {
@@ -87,7 +82,6 @@ if (dentroCesta) {
       bola: { x: canvas.width / 2, y: 460, r: 15, vy: 0, lancada: false }
     }
   }
-
   return {
     ...estado,
     cesta: { ...estado.cesta, x: novaX, vx: novoVx },
