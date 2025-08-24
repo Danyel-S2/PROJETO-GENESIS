@@ -22,16 +22,27 @@ function atualizar(estado) {
     estado.bola.x < estado.cesta.x + estado.cesta.w &&
     estado.bola.y < estado.cesta.y + estado.cesta.h &&
     estado.bola.y > estado.cesta.y - estado.bola.r
-    
-  if (dentroCesta) {
-    return {...estado, cesta: { ...estado.cesta, x: novaX, vx: novoVx },
-      bola: { x: canvas.width / 2, y: 460, r: 15, vy: 0, lancada: false }, pontos: estado.pontos + 1
+
+   if (dentroCesta) {
+    return {
+      ...estado,
+      cesta: { ...estado.cesta, x: novaX, vx: novoVx },
+      bola: { x: canvas.width / 2, y: 460, r: 15, vy: 0, lancada: false },
+      pontos: estado.pontos + 1
     }
   }
+
   if (novaY > 460) {
-    return {...estado, cesta: { ...estado.cesta, x: novaX, vx: novoVx }, bola: { x: canvas.width / 2, y: 460, r: 15, vy: 0, lancada: false }
+    return {
+      ...estado,
+      cesta: { ...estado.cesta, x: novaX, vx: novoVx },
+      bola: { x: canvas.width / 2, y: 460, r: 15, vy: 0, lancada: false }
     }
   }
-  return {...estado, cesta: { ...estado.cesta, x: novaX, vx: novoVx }, bola: { ...estado.bola, y: novaY, vy: novaVy, lancada: true }
+
+  return {
+    ...estado,
+    cesta: { ...estado.cesta, x: novaX, vx: novoVx },
+    bola: { ...estado.bola, y: novaY, vy: novaVy, lancada: true }
   }
 }
