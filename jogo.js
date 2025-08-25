@@ -94,13 +94,15 @@ const lancar = (estado) =>
     ? { ...estado, bola: { ...estado.bola, velocidade: -15, lancada: true } }
     : estado
 // Loop do jogo
-const loop = () => {
-  estado = atualizar(estado);
-  desenhar(contexto, estado);
-  requestAnimationFrame(loop);
-};
-loop();
+const loop = (estado) => {
+  const novoEstado = atualizar(estado)
+  desenhar(contexto, novoEstado)
+  requestAnimationFrame(() => loop(novoEstado))
+}
+
+loop(estadoInicial)
+
 
 // clique → lança a bola
 canvas.addEventListener("click", () => {
-  estado = lancar(estado);
+  estado = lancar(estado)
