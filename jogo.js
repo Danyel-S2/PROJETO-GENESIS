@@ -89,18 +89,10 @@ function atualizar(estado) {
   }
 }
 // Função pura: Deve lançar a bola
-const lancar = (estado) => {
-  if (!estado.bola.lancada) {
-    return {
-      ...estado,
-      bola: { ...estado.bola, velocidade: -20, lancada: true }
-    };
-  }
-  return estado;
-};
-
-let estado = estadoInicial;
-
+const lancar = (estado) =>
+  !estado.bola.lancada
+    ? { ...estado, bola: { ...estado.bola, velocidade: -15, lancada: true } }
+    : estado
 // Loop do jogo
 const loop = () => {
   estado = atualizar(estado);
