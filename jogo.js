@@ -89,13 +89,13 @@ function atualizar(estado) {
 //essa função recebe o estado atual do jogo e verifica se a bola ainda não foi lançada. Se ainda não foi ela retorna um novo objeto de estado, copiando tudo oq já existia, mas alterando os atributos da bola como (velocidade: -15). 
 const lancar = (estado) =>
   !estado.bola.lancada
-    ? { ...estado, bola: { ...estado.bola, velocidade: -15, lancada: true } }
+    ? { ...estado, bola: { ...estado.bola, vy: -15, lancada: true } }
     : estado
 // Loop do jogo
 // A função loop recebe o estado atual do jogo como argumento, gera um novo estado (atualizar(estado)), desenha o estado atualizado na tela (canvas)(desenhar(contexto, novoEstado)) e agenda a próxima chamada do loop, passando o novo estado (requestAnimationFrame(() => loop(novoEstado))).
 const loop = (estado) => {
   const novoEstado = atualizar(estado)
-  desenhar(contexto, novoEstado)
+  desenhar(ctx, novoEstado)
   requestAnimationFrame(() => loop(novoEstado))
 }
 //Dá o pontapé inicial chamando o loop pela primeira vez, passando o estado inicial do jogo (estadoInicial).
