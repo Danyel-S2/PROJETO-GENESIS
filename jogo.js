@@ -106,4 +106,4 @@ loop(estadoInicial)
 //Escuta cliques no canvas. Quando o jogador clica, chama lancar(estado) para tentar lançar a bola e ainda atualiza a variável estado com o novo estado retornado.(utilizei a variavel pq precisava que essa parte sempre atualiza-se)
 
 canvas.addEventListener("click", () => {
-  estado = lancar(estado)
+  estado = lancar(estado) })
