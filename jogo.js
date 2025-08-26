@@ -87,26 +87,43 @@ const atualizar = (estado) => {
     bola: { ...estado.bola, y: novaY, vy: novaVy, lancada: true }
   }
 }
-//Jogou a bola mas fez nada
+
 // Função pura: Deve lançar a bola
 //essa função recebe o estado atual do jogo e verifica se a bola ainda não foi lançada. Se ainda não foi ela retorna um novo objeto de estado, copiando tudo oq já existia, mas alterando os atributos da bola como (velocidade: -15). 
 const lancar = (estado) =>
   !estado.bola.lancada
     ? { ...estado, bola: { ...estado.bola, vy: -15, lancada: true } }
     : estado
-// Loop do jogo
-// A função loop recebe o estado atual do jogo como argumento, gera um novo estado (atualizar(estado)), desenha o estado atualizado na tela (canvas)(desenhar(contexto, novoEstado)) e agenda a próxima chamada do loop, passando o novo estado (requestAnimationFrame(() => loop(novoEstado))).
+
+// Função loop: Controla o ciclo principal do jogo
+// Essa função recebe o estado atual do jogo e executa o ciclo de um frame.
+// Primeiro, verifica se existe alguma ação pendente na fila (como o clique para lançar a bola). 
+// Caso exista, aplica essa ação sobre o estado; caso não exista, usa a função identidade, mantendo o estado igual.
+// Depois disso, chama a função atualizar, que aplica as regras automáticas do jogo (como gravidade e movimento).
+// Em seguida, chama a função desenhar, que renderiza o estado atual no canvas.
+// Por fim, usa requestAnimationFrame para agendar a chamada recursiva do loop com o novo estado, garantindo que o jogo continue rodando continuamente.
+// --- Loop único ---
 const loop = (estado) => {
-  const novoEstado = atualizar(estado)
+  // pega primeira ação pendente, ou identidade
+  const acao = filaAcoes.shift() || ((s) => s)
+
+  // aplica ação no estado
+  const depoisAcao = acao(estado)
+
+  // física
+  const novoEstado = atualizar(depoisAcao)
+
+  // desenha
   desenhar(ctx, novoEstado)
+
+  // recursão
   requestAnimationFrame(() => loop(novoEstado))
 }
-//Dá o pontapé inicial chamando o loop pela primeira vez, passando o estado inicial do jogo (estadoInicial).
-loop(estadoInicial)
 
-
-// clique → lança a bola
-//Escuta cliques no canvas. Quando o jogador clica, chama lancar(estado) para tentar lançar a bola e ainda atualiza a variável estado com o novo estado retornado.(utilizei a variavel pq precisava que essa parte sempre atualiza-se)
-
+// --- Evento: só empilha ação ---
 canvas.addEventListener("click", () => {
-  estado = lancar(estado) })
+  filaAcoes.push(lancar)
+})
+
+// iniciar
+loop(estadoInicial) passando o estado inicial do jogo (estadoInicial).
