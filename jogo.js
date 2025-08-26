@@ -35,11 +35,13 @@ const desenhar = (ctx, estado) => {
 }
 
 const atualizar = (estado) => {
+  //Movimento da cesta de um lado pro outro
   const novaX = estado.cesta.x + estado.cesta.vx
   const novoVx =
     novaX + estado.cesta.w > canvas.width || novaX < 0
       ? -estado.cesta.vx
       : estado.cesta.vx
+//Impede que a cesta vá pro infinito e além das laterais
 
   const cestaCorrigida = {
     ...estado.cesta,
@@ -50,6 +52,7 @@ const atualizar = (estado) => {
   if (!estado.bola.lancada) {
     return { ...estado, cesta: cestaCorrigida }
   }
+//Se a bola não for lançada 
 
   const novaY = estado.bola.y + estado.bola.vy
   const novaVy = estado.bola.vy + 0.5
