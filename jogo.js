@@ -72,7 +72,7 @@ const atualizar = (estado) => {
       pontos: estado.pontos + 1
     }
   }
-
+//Se a bola entrar,faz ponto.A laranjinha volta pro inicio
   if (novaY > 460) {
     return {
       ...estado,
@@ -80,13 +80,14 @@ const atualizar = (estado) => {
       bola: { x: canvas.width / 2, y: 460, r: 15, vy: 0, lancada: false }
     }
   }
-
+//Se a bola não entrar,não faz ponto.A laranjinha volta pro inicio
   return {
     ...estado,
     cesta: cestaCorrigida,
     bola: { ...estado.bola, y: novaY, vy: novaVy, lancada: true }
   }
 }
+//Jogou a bola mas fez nada
 // Função pura: Deve lançar a bola
 //essa função recebe o estado atual do jogo e verifica se a bola ainda não foi lançada. Se ainda não foi ela retorna um novo objeto de estado, copiando tudo oq já existia, mas alterando os atributos da bola como (velocidade: -15). 
 const lancar = (estado) =>
