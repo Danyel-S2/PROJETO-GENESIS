@@ -54,6 +54,7 @@ const atualizar = (estado) => {
   }
 //Se a bola não for lançada 
 
+//Movimento da laranjinha(bola)
   const novaY = estado.bola.y + estado.bola.vy
   const novaVy = estado.bola.vy + 0.5
 
@@ -62,7 +63,7 @@ const atualizar = (estado) => {
     estado.bola.x < cestaCorrigida.x + cestaCorrigida.w &&
     estado.bola.y < cestaCorrigida.y + cestaCorrigida.h &&
     estado.bola.y > cestaCorrigida.y - estado.bola.r
-
+//Verifica se a bola entrou no aro (cesta)
   if (dentroCesta) {
     return {
       ...estado,
