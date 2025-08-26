@@ -90,7 +90,7 @@ const atualizar = (estado) => {
 // mas alterando os atributos da bola como vy (velocidade vertical: -15) e marcando lancada como true.
 const lancar = (estado) =>
   !estado.bola.lancada
-    ? { ...estado, bola: { ...estado.bola, vy: -15, lancada: true } }
+    ? { ...estado, bola: { ...estado.bola, vy: -20, lancada: true } }
     : estado
 
 // FUNÇÃO LOOP: Controla o ciclo principal do jogo
