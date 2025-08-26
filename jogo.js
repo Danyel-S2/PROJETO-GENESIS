@@ -34,29 +34,26 @@ const desenhar = (ctx, estado) => {
   placarEl.textContent = "Pontos: " + estado.pontos
 }
 
-function atualizar(estado) {
-  // movimento da cesta
-  let novaX = estado.cesta.x + estado.cesta.vx
-  let novoVx = estado.cesta.vx
-  if (novaX + estado.cesta.w > canvas.width) {
-    novaX = canvas.width - estado.cesta.w
-    novoVx *= -1
-  }
-  if (novaX < 0) {
-    novaX = 0
-    novoVx *= -1
+const atualizar = (estado) => {
+  const novaX = estado.cesta.x + estado.cesta.vx
+  const novoVx =
+    novaX + estado.cesta.w > canvas.width || novaX < 0
+      ? -estado.cesta.vx
+      : estado.cesta.vx
+
+  const cestaCorrigida = {
+    ...estado.cesta,
+    x: Math.min(Math.max(novaX, 0), canvas.width - estado.cesta.w),
+    vx: novoVx
   }
 
   if (!estado.bola.lancada) {
-    return {
-      ...estado,
-      cesta: { ...estado.cesta, x: novaX, vx: novoVx }
-    }
+    return { ...estado, cesta: cestaCorrigida }
   }
 
   const novaY = estado.bola.y + estado.bola.vy
   const novaVy = estado.bola.vy + 0.5
-
+  
   const dentroCesta =
     estado.bola.x > estado.cesta.x &&
     estado.bola.x < estado.cesta.x + estado.cesta.w &&
