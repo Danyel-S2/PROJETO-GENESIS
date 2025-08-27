@@ -117,15 +117,19 @@ const atualizar = (estado) => {
   }
 
   // Movimento da bola
+  //Aplica movimento vertical na bola:novaY é a nova posição da bola após usando a velocidade,já novaVy serve para simular o efeito da gravidade,assim aumenta a velocidade vertical a cada lance.
   const novaY = estado.bola.y + estado.bola.vy
-  const novaVy = estado.bola.vy + 0.5
+  const novaVy = estado.bola.vy + 0.5//gravidade
+
+//Verificando se a bola entrou
+//Verifica se a posição da bola está dentro da área da cesta. Para contar ponto:se o x da bola está dentro da cesta ou se y da bola deve está em cima ou embaixo da cesta,levando o raio em consideração
 
   const dentroCesta =
     estado.bola.x > cestaCorrigida.x &&
     estado.bola.x < cestaCorrigida.x + cestaCorrigida.w &&
     novaY < cestaCorrigida.y + cestaCorrigida.h &&
     novaY > cestaCorrigida.y - estado.bola.r
-
+// Se a bola entrou na cesta,contabiliza o ponto e volta a bola a posição de origem
   if (dentroCesta) {
     return {
       ...estado,
