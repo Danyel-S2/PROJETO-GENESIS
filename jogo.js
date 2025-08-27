@@ -113,5 +113,12 @@ canvas.addEventListener("click", () => {
   filaAcoes.push(lancar)
 })
 
+// EVENTO: lançar a bola com a tecla espaço
+// Adicionei essa função para que possa utilizar a tecla espaço para lançar a bola, problema o qual o orientador sugeriu para melhor eficácia
+document.addEventListener("keydown", (event) => {
+  if (event.code === "Space") {
+    filaAcoes.push(lancar)
+  }
+})
 // INICIAR passando o estado inicial do jogo
 loop(estadoInicial)
