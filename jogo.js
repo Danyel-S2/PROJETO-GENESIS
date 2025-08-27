@@ -138,19 +138,20 @@ const atualizar = (estado) => {
       pontos: estado.pontos + 1
     }
   }
-
+//Verificando se a bola caiu no chão
+//Se a bola caiu no chão,conta como erro.Assim somando 1 erro ao total.
   if (novaY > 460) {
     const novosErros = estado.erros + 1;
-
+//Se o número de erros atingir 5 ou mais,exibirá a mensagem "Game Over" e retorna o estado com os erros.
     if (novosErros >= 5) {
-      // Exibe mensagem antes de reiniciar
+      // Exibe uma mensagem antes de reiniciar
       return {
         ...estado,
         mensagem: "Game Over",
         erros: novosErros
       };
     }
-
+//Se não atingir o limite de erros,a bola volta a posição para novo lançamento.
     return {
       ...estado,
       cesta: cestaCorrigida,
@@ -158,7 +159,7 @@ const atualizar = (estado) => {
       erros: novosErros
     }
   }
-
+//Se a bola não entrou na cesta nem caiu no chão:continua o movimento normal.
   return {
     ...estado,
     cesta: cestaCorrigida,
