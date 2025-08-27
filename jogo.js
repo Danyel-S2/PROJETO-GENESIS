@@ -93,20 +93,25 @@ ctx.stroke();
 }
 
 // FUNÇÃO DE ATUALIZAÇÃO
+//A função vai servir para atualizar a posição da cesta e da bola no jog,para aplicar os pontos e os errose para voltar ao novo estado do jogo a cada jogada.
+//Cria uma função que recebe o estado atual do jogo como parâmetro.Essa função será muito chamada dentro do loop do basquete.
 const atualizar = (estado) => {
   // Movimento da cesta
+  //A seguir,vamos calcular a nova posição horizontal da cesta somada com sua posição atual e com sua velocidade
   const novaX = estado.cesta.x + estado.cesta.vx
+  //Aqui verifico se o novo local da cesta ultrapassou os limites da quadra (esquerda ou direita).
+  //Caso ultrapasse,volta na direção oposta a que foi (bate e volta).
   const novoVx =
     novaX + estado.cesta.w > canvas.width || novaX < 0
       ? -estado.cesta.vx
       : estado.cesta.vx
-
+  //Cria um novo objeto chamado cestaCorrigida,podendo atualizar a posição x e a velocidade vx, garantindo que a cesta nunca ultrapasse as bordas (usando Math.min e Math.max para limitar a posição entre o maximo e minimo possível)
   const cestaCorrigida = {
     ...estado.cesta,
     x: Math.min(Math.max(novaX, 0), canvas.width - estado.cesta.w),
     vx: novoVx
   }
-
+//Caso a bola não tenha sido lançada,só precisamos atualizar o movimento da cesta.Logo a função retorna o novo estado,sem mexer da bola.
   if (!estado.bola.lancada) {
     return { ...estado, cesta: cestaCorrigida }
   }
