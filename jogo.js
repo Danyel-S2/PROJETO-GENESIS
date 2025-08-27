@@ -30,7 +30,7 @@ const desenhar = (ctx, estado) => {
   ctx.fillRect(canvas.width / 2 - 60, canvas.height - 100, 120, 100);
 
   // Linha do garrafão
-  ctx.strokeStyle = "white";
+  ctx.strokeStyle = "black";
   ctx.lineWidth = 2;
   ctx.strokeRect(canvas.width / 2 - 60, canvas.height - 100, 120, 100);
 
@@ -52,7 +52,7 @@ const desenhar = (ctx, estado) => {
   ctx.setLineDash([5, 5]);
   ctx.stroke();
   ctx.setLineDash([]); // reseta tracejado
-  
+
   ctx.fillStyle = "blue"
   ctx.fillRect(estado.cesta.x, estado.cesta.y, estado.cesta.w, estado.cesta.h)
  
