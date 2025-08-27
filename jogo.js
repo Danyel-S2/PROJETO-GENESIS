@@ -9,7 +9,9 @@ const placarEl = document.getElementById("placar")
 const estadoInicial = {
   bola: { x: 250, y: 460, r: 15, vy: 0, lancada: false },
   cesta: { x: 200, y: 50, w: 100, h: 10, vx: 2 },
-  pontos: 0
+  pontos: 0,
+  erros: 0,
+  mensagem: "" // mensagem de fim de jogo
 }
 
 // Fila de ações (imutável dentro do loop, só o browser empilha eventos aqui)
@@ -49,7 +51,14 @@ ctx.stroke();
   ctx.fillStyle = "red"
   ctx.fill()
 
-  placarEl.textContent = "Pontos: " + estado.pontos
+  placarEl.textContent = "Pontos: " + estado.pontos + " | Erros: " + estado.erros
+
+  // Exibir mensagem caso exista
+  if (estado.mensagem) {
+    ctx.fillStyle = "black";
+    ctx.font = "30px Arial";
+    ctx.fillText(estado.mensagem, canvas.width / 2 - 70, canvas.height / 2);
+  }
 }
 
 // FUNÇÃO DE ATUALIZAÇÃO
@@ -76,10 +85,10 @@ const atualizar = (estado) => {
   const novaVy = estado.bola.vy + 0.5
 
   const dentroCesta =
-    estado.bola.x > cestaCorrigida.x &&
-    estado.bola.x < cestaCorrigida.x + cestaCorrigida.w &&
-    estado.bola.y < cestaCorrigida.y + cestaCorrigida.h &&
-    estado.bola.y > cestaCorrigida.y - estado.bola.r
+  estado.bola.x > cestaCorrigida.x &&
+  estado.bola.x < cestaCorrigida.x + cestaCorrigida.w &&
+  novaY < cestaCorrigida.y + cestaCorrigida.h &&
+  novaY > cestaCorrigida.y - estado.bola.r
 
   if (dentroCesta) {
     return {
@@ -91,18 +100,17 @@ const atualizar = (estado) => {
   }
 
   if (novaY > 460) {
-    return {
-      ...estado,
-      cesta: cestaCorrigida,
-      bola: { x: canvas.width / 2, y: 460, r: 15, vy: 0, lancada: false }
-    }
+  const novosErros = estado.erros + 1;
+
+  if (novosErros >= 5) {
+    // Exibe mensagem antes de reiniciar
+    return { ...estado, mensagem: "Game Over" };
   }
 
   return {
-    ...estado,
-    cesta: cestaCorrigida,
-    bola: { ...estado.bola, y: novaY, vy: novaVy, lancada: true }
-  }
+  ...estado,
+  cesta: cestaCorrigida,
+  bola: { ...estado.bola, y: novaY, vy: novaVy, lancada: true }
 }
 
 // FUNÇÃO PURA: Deve lançar a bola
@@ -121,13 +129,20 @@ const lancar = (estado) =>
 // Depois disso, chama a função atualizar, que aplica as regras automáticas do jogo (como gravidade e movimento).
 // Em seguida, chama a função desenhar, que renderiza o estado atual no canvas.
 // Por fim, usa requestAnimationFrame para agendar a chamada recursiva do loop com o novo estado, garantindo que o jogo continue rodando continuamente.
-const loop = (estado) => {
-  const acao = filaAcoes.shift() || ((s) => s)
-  const depoisAcao = acao(estado)
-  const novoEstado = atualizar(depoisAcao)
-  desenhar(ctx, novoEstado)
-  requestAnimationFrame(() => loop(novoEstado))
-}
+   const loop = (estado) => {
+
+  if (estado.mensagem === "Game Over") {
+    desenhar(ctx, estado);
+    setTimeout(() => loop(estadoInicial), 2000);
+    return;
+  }
+
+  const acao = filaAcoes.shift() || ((s) => s);
+  const depoisAcao = acao(estado);
+  const novoEstado = atualizar(depoisAcao);
+  desenhar(ctx, novoEstado);
+  requestAnimationFrame(() => loop(novoEstado));
+};
 
 // EVENTO: só empilha ação
 canvas.addEventListener("click", () => {
@@ -138,8 +153,12 @@ canvas.addEventListener("click", () => {
 // Adicionei essa função para que possa utilizar a tecla espaço para lançar a bola, problema o qual o orientador sugeriu para melhor eficácia
 document.addEventListener("keydown", (event) => {
   if (event.code === "Space") {
-    filaAcoes.push(lancar)
+    event.preventDefault();      // evita rolagem da página
+    if (!event.repeat) {         // evita empilhar várias ações segurando a tecla
+      filaAcoes.push(lancar);
+    }
   }
 })
+
 // INICIAR passando o estado inicial do jogo
 loop(estadoInicial)
