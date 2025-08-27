@@ -21,7 +21,38 @@ let filaAcoes = []
 // Aqui criei uma função chamada "desenhar" que basicamente vai me permitir desenhar os componentes do jogo no canvas. Essa função possui 2 parâmetros, um é o contexto, onde vou desenhar os elemntos em 2d, e o outro é o estado que vai determinar onde e quando o elemento vai ser desenhado. Agora vamos para o que essa função faz na prática. Primeiro para desenhar no canvas é preciso apagar todo o espaço que foi criado, para isso usei a função nativa do js "clearRect" que é a responsável por limpar uma área que é definida por 4 parâmetros, o primeiro e o segundo são cordenadas x e y, que é de onde vai começara limpar, já os outros 2 vão ser a largura e altura da área que vai ser limpa, no caso, o canvas inteiro.      Para conseguir desenhar a cesta de basquete, eu usei 2 funções nativas do js, a primeira é a "fillStyle", ela basicamente da cor ao elemento que eu criar em seguida, no caso, a cesta de baquete. A segunda função é a "fillRect", essa função criar um retângulo baseado em 4 parâmetros, o primeiro e o segundo são as coordenadas x e y, que eu coloquei baseadas no estado e nos dados da coordenada da cesta, já o outros 2 são a largura e altura que coloquei tambèm baseados no registro da cesta.      Agora vanos para a bola. Para fazer a bola de basquete, diferente do outro elemento, aqui eu vou precisar uma função nativa do js chamada "beginPath", que vai dar inicio ao processo de um novo desenho, para o outro não é preciso porque é um retângulo. Depois disso, eu usei a função que ja foi usada antes "fillStyle" que deine a cor da bola, e em seguida usei a função nativa do js "arc", que vai desenhar um círculo baseado em 6 parâmetros, os 2 priemiros coordenada, o terceiro o raio do círculo, e os 2 últimos são os ângulos de início e fim do círculo, o primeiro 0 e o segundo coloquei Math.Pi * 2, que seria 180 * 2 = 360, formando um círculo completo.      Pra finalizar, só falta desenhar o placar de pontos, para isso usei a função nativa do js "textContent" que cria um texto de acordo com o que eu defini, no caso, defini uma string contatenada ao estado de pontos do jogo, que defini lá no estado inicial do jogo.
 const desenhar = (ctx, estado) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
+// Desenho da quadra de basquete (fundo)
+  ctx.fillStyle = "#fdd9a0"; // cor da madeira da quadra
+  ctx.fillRect(0, 0, canvas.width, canvas.height); // fundo
 
+  // Área pintada (garrafão)
+  ctx.fillStyle = "#d97c3d";
+  ctx.fillRect(canvas.width / 2 - 60, canvas.height - 100, 120, 100);
+
+  // Linha do garrafão
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(canvas.width / 2 - 60, canvas.height - 100, 120, 100);
+
+  // Meia-lua da cesta
+  ctx.beginPath();
+  ctx.arc(canvas.width / 2, canvas.height - 100, 60, 0, Math.PI, true);
+  ctx.stroke();
+
+  // Linha de fundo
+  ctx.beginPath();
+  ctx.moveTo(0, canvas.height - 2);
+  ctx.lineTo(canvas.width, canvas.height - 2);
+  ctx.stroke();
+
+  // Linha central (estética)
+  ctx.beginPath();
+  ctx.moveTo(0, canvas.height / 2);
+  ctx.lineTo(canvas.width, canvas.height / 2);
+  ctx.setLineDash([5, 5]);
+  ctx.stroke();
+  ctx.setLineDash([]); // reseta tracejado
+  
   ctx.fillStyle = "blue"
   ctx.fillRect(estado.cesta.x, estado.cesta.y, estado.cesta.w, estado.cesta.h)
  
