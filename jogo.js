@@ -22,7 +22,28 @@ const desenhar = (ctx, estado) => {
 
   ctx.fillStyle = "blue"
   ctx.fillRect(estado.cesta.x, estado.cesta.y, estado.cesta.w, estado.cesta.h)
+ 
+// Desenho da rede na cesta
+ctx.strokeStyle = "silver"; // Cor prata
+ctx.lineWidth = 2;          // linhas
 
+let xInicio = estado.cesta.x;
+let yInicio = estado.cesta.y + estado.cesta.h;
+
+ctx.beginPath();
+
+// Desenho de linhas diagonais formando padrão de corrente
+for (let i = 0; i <= estado.cesta.w; i += 20) {
+  // Linha pendente para a esquerda
+  ctx.moveTo(xInicio + i, yInicio);
+  ctx.lineTo(xInicio + i - 10, yInicio + 40);
+
+  // Linha pendente para a direita
+  ctx.moveTo(xInicio + i, yInicio);
+  ctx.lineTo(xInicio + i + 10, yInicio + 40);
+}
+
+ctx.stroke();
   ctx.beginPath()
   ctx.arc(estado.bola.x, estado.bola.y, estado.bola.r, 0, Math.PI * 2) // corrigido Math.PI
   ctx.fillStyle = "red"
