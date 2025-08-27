@@ -205,17 +205,17 @@ const lancar = (estado) =>
   requestAnimationFrame(() => loop(novoEstado));
 }
 
-// EVENTO: só empilha ação
+//EVENTO: só empilha ação
 canvas.addEventListener("click", () => {
   filaAcoes.push(lancar)
 })
 
-// EVENTO: lançar a bola com a tecla espaço
+//EVENTO:Serve para lançar a bola com a tecla espaço
 // Adicionei essa função para que possa utilizar a tecla espaço para lançar a bola, problema o qual o orientador sugeriu para melhor eficácia
 document.addEventListener("keydown", (event) => {
   if (event.code === "Space") {
-    event.preventDefault();      // evita rolagem da página
-    if (!event.repeat) {         // evita empilhar várias ações segurando a tecla
+    event.preventDefault();      // é para evitar que a página desça
+    if (!event.repeat) {         // deve evitar empilhar várias ações segurando o espaço
       filaAcoes.push(lancar);
     }
   }
