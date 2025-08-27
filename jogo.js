@@ -85,10 +85,10 @@ const atualizar = (estado) => {
   const novaVy = estado.bola.vy + 0.5
 
   const dentroCesta =
-  estado.bola.x > cestaCorrigida.x &&
-  estado.bola.x < cestaCorrigida.x + cestaCorrigida.w &&
-  novaY < cestaCorrigida.y + cestaCorrigida.h &&
-  novaY > cestaCorrigida.y - estado.bola.r
+    estado.bola.x > cestaCorrigida.x &&
+    estado.bola.x < cestaCorrigida.x + cestaCorrigida.w &&
+    novaY < cestaCorrigida.y + cestaCorrigida.h &&
+    novaY > cestaCorrigida.y - estado.bola.r
 
   if (dentroCesta) {
     return {
@@ -100,17 +100,34 @@ const atualizar = (estado) => {
   }
 
   if (novaY > 460) {
-  const novosErros = estado.erros + 1;
+    const novosErros = estado.erros + 1;
 
-  if (novosErros >= 5) {
-    // Exibe mensagem antes de reiniciar
-    return { ...estado, mensagem: "Game Over" };
+    if (novosErros >= 5) {
+      // Exibe mensagem antes de reiniciar
+      return {
+        ...estado,
+        mensagem: "Game Over",
+        erros: novosErros
+      };
+    }
+
+    return {
+      ...estado,
+      cesta: cestaCorrigida,
+      bola: { x: canvas.width / 2, y: 460, r: 15, vy: 0, lancada: false },
+      erros: novosErros
+    }
   }
 
   return {
-  ...estado,
-  cesta: cestaCorrigida,
-  bola: { ...estado.bola, y: novaY, vy: novaVy, lancada: true }
+    ...estado,
+    cesta: cestaCorrigida,
+    bola: {
+      ...estado.bola,
+      y: novaY,
+      vy: novaVy,
+    }
+  }
 }
 
 // FUNÇÃO PURA: Deve lançar a bola
@@ -133,7 +150,10 @@ const lancar = (estado) =>
 
   if (estado.mensagem === "Game Over") {
     desenhar(ctx, estado);
-    setTimeout(() => loop(estadoInicial), 2000);
+    setTimeout(() => {
+      filaAcoes = [] // limpa ações pendentes
+      loop({ ...estadoInicial }) // reinicia do zero
+    }, 2000);
     return;
   }
 
@@ -142,7 +162,7 @@ const lancar = (estado) =>
   const novoEstado = atualizar(depoisAcao);
   desenhar(ctx, novoEstado);
   requestAnimationFrame(() => loop(novoEstado));
-};
+}
 
 // EVENTO: só empilha ação
 canvas.addEventListener("click", () => {
