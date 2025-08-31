@@ -5,90 +5,94 @@ const ctx = canvas.getContext("2d")
 const placarEl = document.getElementById("placar")
 
 // ESTADO INICIAL DO JOGO
-// A função "estadoInicial" ela tem o objetivo de definir o estado inicial do jogo, para isso eu criei 3 registros: bola, cesta e pontos. registros como bola e cesta tem dados correspondentes a sua posição e ação no inicio do jogo. Já o registro chamado pontos, vai armazenar a pontuação do jogador começando em 0.
+// A função "estadoInicial" ela tem o objetivo de definir o estado inicial do jogo, para isso eu criei 5 registros: bola, cesta, pontos, erros e mensagem. registros como bola e cesta tem dados correspondentes a sua posição e ação no inicio do jogo. Já os registros chamados pontos e erros vão armazenar a pontuação do jogador começando em 0 e a quantidade de erros do jogador enquanto o registro mensagem guarda uma mensagem de fim de jogo.
 const estadoInicial = {
   bola: { x: 250, y: 460, r: 15, vy: 0, lancada: false },
   cesta: { x: 200, y: 50, w: 100, h: 10, vx: 2 },
   pontos: 0,
   erros: 0,
-  mensagem: "" // mensagem de fim de jogo
+  mensagem: ""
 }
 
 // Fila de ações (imutável dentro do loop, só o browser empilha eventos aqui)
 let filaAcoes = []
 
 // FUNÇÃO PARA DESENHAR O JOGO
-// Aqui criei uma função chamada "desenhar" que basicamente vai me permitir desenhar os componentes do jogo no canvas. Essa função possui 2 parâmetros, um é o contexto, onde vou desenhar os elemntos em 2d, e o outro é o estado que vai determinar onde e quando o elemento vai ser desenhado. Agora vamos para o que essa função faz na prática. Primeiro para desenhar no canvas é preciso apagar todo o espaço que foi criado, para isso usei a função nativa do js "clearRect" que é a responsável por limpar uma área que é definida por 4 parâmetros, o primeiro e o segundo são cordenadas x e y, que é de onde vai começara limpar, já os outros 2 vão ser a largura e altura da área que vai ser limpa, no caso, o canvas inteiro.      Para conseguir desenhar a cesta de basquete, eu usei 2 funções nativas do js, a primeira é a "fillStyle", ela basicamente da cor ao elemento que eu criar em seguida, no caso, a cesta de baquete. A segunda função é a "fillRect", essa função criar um retângulo baseado em 4 parâmetros, o primeiro e o segundo são as coordenadas x e y, que eu coloquei baseadas no estado e nos dados da coordenada da cesta, já o outros 2 são a largura e altura que coloquei tambèm baseados no registro da cesta.      Agora vanos para a bola. Para fazer a bola de basquete, diferente do outro elemento, aqui eu vou precisar uma função nativa do js chamada "beginPath", que vai dar inicio ao processo de um novo desenho, para o outro não é preciso porque é um retângulo. Depois disso, eu usei a função que ja foi usada antes "fillStyle" que deine a cor da bola, e em seguida usei a função nativa do js "arc", que vai desenhar um círculo baseado em 6 parâmetros, os 2 priemiros coordenada, o terceiro o raio do círculo, e os 2 últimos são os ângulos de início e fim do círculo, o primeiro 0 e o segundo coloquei Math.Pi * 2, que seria 180 * 2 = 360, formando um círculo completo.      Pra finalizar, só falta desenhar o placar de pontos, para isso usei a função nativa do js "textContent" que cria um texto de acordo com o que eu defini, no caso, defini uma string contatenada ao estado de pontos do jogo, que defini lá no estado inicial do jogo.
+// Aqui criei uma função chamada "desenhar" que basicamente vai me permitir desenhar os componentes do jogo no canvas. Essa função possui 2 parâmetros, um é o contexto, onde vou desenhar os elementos em 2d, e o outro é o estado que vai determinar onde e quando o elemento vai ser desenhado. Agora vamos para o que essa função faz na prática. Primeiro para desenhar no canvas é preciso apagar todo o espaço que foi criado, para isso usei a função nativa do js "clearRect" que é a responsável por limpar uma área que é definida por 4 parâmetros, o primeiro e o segundo são cordenadas x e y, que é de onde vai começara limpar, já os outros 2 vão ser a largura e altura da área que vai ser limpa, no caso, o canvas inteiro.     Depois de limpar o canvas, vamos começar a desenhar os elementos do jogo. Primeiro vou desenhar o fundo do jogo, que é a quadra de basquete, para isso usei a função nativa do js "fillStyle" que define a cor do elemento que eu criar em seguida, no caso, a quadra de basquete. Depois usei a função nativa do js "fillRect" que cria um retângulo baseado em 4 parâmetros, o primeiro e o segundo são as coordenadas x e y, que eu coloquei como 0 e 0 para começar do canto superior esquerdo, já os outros 2 são a largura e altura que coloquei como a largura e altura do canvas.      Para deixar a quadra mais parecida com a real, desenhei o garrafão, a meia lua da cesta, a linha de fundo e a linha central. Para isso usei as funções nativas do js "beginPath", "arc", "moveTo", "lineTo", "setLineDash" e "stroke". Essas funções são responsáveis por desenhar linhas e formas no canvas.               
+// Para conseguir desenhar a cesta de basquete, eu usei 2 funções nativas do js, a primeira é a "fillStyle", ela basicamente da cor ao elemento que eu criar em seguida, no caso, a cesta de baquete. A segunda função é a "fillRect", essa função criar um retângulo baseado em 4 parâmetros, o primeiro e o segundo são as coordenadas x e y, que eu coloquei baseadas no estado e nos dados da coordenada da cesta, já o outros 2 são a largura e altura que coloquei tambèm baseados no registro da cesta.      Também desenhei a rede da cesta, para isso usei as funções nativas do js "strokeStyle", "lineWidth", "beginPath", "moveTo", "lineTo" e "stroke". Essas funções são responsáveis por desenhar linhas no canvas. Usei um loop para desenhar várias linhas diagonais formando um padrão de corrente, simulando a rede da cesta.     
+//  Agora vamos para a bola. Para fazer a bola de basquete, diferente do outro elemento, aqui eu vou precisar uma função nativa do js chamada "beginPath", que vai dar inicio ao processo de um novo desenho, para o outro não é preciso porque é um retângulo. Depois disso, eu usei a função que ja foi usada antes "fillStyle" que deine a cor da bola, e em seguida usei a função nativa do js "arc", que vai desenhar um círculo baseado em 6 parâmetros, os 2 priemiros coordenada, o terceiro o raio do círculo, e os 2 últimos são os ângulos de início e fim do círculo, o primeiro 0 e o segundo coloquei Math.Pi * 2, que seria 180 * 2 = 360, formando um círculo completo.      Pra finalizar, só falta desenhar o placar de pontos, para isso usei a função nativa do js "textContent" que cria um texto de acordo com o que eu defini, no caso, defini uma string contatenada ao estado de pontos do jogo, que defini lá no estado inicial do jogo.
 const desenhar = (ctx, estado) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-// Desenho da quadra de basquete (fundo)
-  ctx.fillStyle = "#fdd9a0"; // cor da madeira da quadra
-  ctx.fillRect(0, 0, canvas.width, canvas.height); // fundo
+  // Desenho da quadra de basquete (fundo)
+  ctx.fillStyle = "#fdd9a0ff" // cor da madeira da quadra
+  ctx.fillRect(0, 0, canvas.width, canvas.height) // fundo
 
   // Área pintada (garrafão)
-  ctx.fillStyle = "#d97c3d";
-  ctx.fillRect(canvas.width / 2 - 60, canvas.height - 100, 120, 100);
+  ctx.fillStyle = "#d97c3d"
+  ctx.fillRect(canvas.width / 2 - 60, canvas.height - 100, 120, 100)
 
   // Linha do garrafão
-  ctx.strokeStyle = "black";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(canvas.width / 2 - 60, canvas.height - 100, 120, 100);
+  ctx.strokeStyle = "black"
+  ctx.lineWidth = 2
+  ctx.strokeRect(canvas.width / 2 - 60, canvas.height - 100, 120, 100)
 
   // Meia-lua da cesta
-  ctx.beginPath();
-  ctx.arc(canvas.width / 2, canvas.height - 100, 60, 0, Math.PI, true);
-  ctx.stroke();
+  ctx.beginPath()
+  ctx.arc(canvas.width / 2, canvas.height - 100, 60, 0, Math.PI, true)
+  ctx.stroke()
 
   // Linha de fundo
-  ctx.beginPath();
-  ctx.moveTo(0, canvas.height - 2);
-  ctx.lineTo(canvas.width, canvas.height - 2);
-  ctx.stroke();
+  ctx.beginPath()
+  ctx.moveTo(0, canvas.height - 2)
+  ctx.lineTo(canvas.width, canvas.height - 2)
+  ctx.stroke()
 
   // Linha central (estética)
-  ctx.beginPath();
-  ctx.moveTo(0, canvas.height / 2);
-  ctx.lineTo(canvas.width, canvas.height / 2);
-  ctx.setLineDash([5, 5]);
+  ctx.beginPath()
+  ctx.moveTo(0, canvas.height / 2)
+  ctx.lineTo(canvas.width, canvas.height / 2)
+  ctx.setLineDash([5, 5])
   ctx.stroke();
-  ctx.setLineDash([]); // reseta tracejado
+  ctx.setLineDash([]) // reseta tracejado
 
+  // Cesta de basquete
   ctx.fillStyle = "blue"
   ctx.fillRect(estado.cesta.x, estado.cesta.y, estado.cesta.w, estado.cesta.h)
  
-// Desenho da rede na cesta
-ctx.strokeStyle = "silver"; // Cor prata
-ctx.lineWidth = 2;          // linhas
+  // Desenho da rede na cesta
+  ctx.strokeStyle = "silver" // Cor prata
+  ctx.lineWidth = 2          // linhas
 
-let xInicio = estado.cesta.x;
-let yInicio = estado.cesta.y + estado.cesta.h;
+  let xInicio = estado.cesta.x
+  let yInicio = estado.cesta.y + estado.cesta.h
 
-ctx.beginPath();
+  ctx.beginPath()
 
-// Desenho de linhas diagonais formando padrão de corrente
-for (let i = 0; i <= estado.cesta.w; i += 20) {
+  // Desenho de linhas diagonais formando padrão de corrente
+  for (let i = 0; i <= estado.cesta.w; i += 20) {
   // Linha pendente para a esquerda
-  ctx.moveTo(xInicio + i, yInicio);
-  ctx.lineTo(xInicio + i - 10, yInicio + 40);
+  ctx.moveTo(xInicio + i, yInicio)
+  ctx.lineTo(xInicio + i - 10, yInicio + 40)
 
   // Linha pendente para a direita
-  ctx.moveTo(xInicio + i, yInicio);
-  ctx.lineTo(xInicio + i + 10, yInicio + 40);
-}
-
-ctx.stroke();
+  ctx.moveTo(xInicio + i, yInicio)
+  ctx.lineTo(xInicio + i + 10, yInicio + 40)}
+  
+  // bola de basquete
+  ctx.stroke()
   ctx.beginPath()
   ctx.arc(estado.bola.x, estado.bola.y, estado.bola.r, 0, Math.PI * 2) // corrigido Math.PI
   ctx.fillStyle = "red"
   ctx.fill()
 
+  // Placar de pontos
   placarEl.textContent = "Pontos: " + estado.pontos + " | Erros: " + estado.erros
 
   // Exibir mensagem caso exista
   if (estado.mensagem) {
-    ctx.fillStyle = "black";
-    ctx.font = "30px Arial";
-    ctx.fillText(estado.mensagem, canvas.width / 2 - 70, canvas.height / 2);
+    ctx.fillStyle = "black"
+    ctx.font = "30px Arial"
+    ctx.fillText(estado.mensagem, canvas.width / 2 - 70, canvas.height / 2)
   }
 }
 
