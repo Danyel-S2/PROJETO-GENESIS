@@ -145,7 +145,7 @@ const atualizar = (estado) => {
 //Verificando se a bola caiu no chão
 //Se a bola caiu no chão,conta como erro.Assim somando 1 erro ao total.
   if (novaY > 460) {
-    const novosErros = estado.erros + 1;
+    const novosErros = estado.erros + 1
 //Se o número de erros atingir 5 ou mais,exibirá a mensagem "Game Over" e retorna o estado com os erros.
     if (novosErros >= 5) {
       // Exibe uma mensagem antes de reiniciar
@@ -153,7 +153,7 @@ const atualizar = (estado) => {
         ...estado,
         mensagem: "Game Over",
         erros: novosErros
-      };
+      }
     }
 //Se não atingir o limite de erros,a bola volta a posição para novo lançamento.
     return {
@@ -178,7 +178,7 @@ const atualizar = (estado) => {
 // FUNÇÃO PURA: Deve lançar a bola
 // Essa função recebe o estado atual do jogo e verifica se a bola ainda não foi lançada.
 // Se ainda não foi, ela retorna um novo objeto de estado, copiando tudo que já existia,
-// mas alterando os atributos da bola como vy (velocidade vertical: -15) e marcando lancada como true.
+// mas alterando os atributos da bola como vy (velocidade vertical: -20) e marcando lancada como true.
 const lancar = (estado) =>
   !estado.bola.lancada
     ? { ...estado, bola: { ...estado.bola, vy: -20, lancada: true } }
@@ -198,15 +198,15 @@ const lancar = (estado) =>
     setTimeout(() => {
       filaAcoes = [] // limpa ações pendentes
       loop({ ...estadoInicial }) // reinicia do zero
-    }, 2000);
-    return;
+    }, 2000)
+    return
   }
 
-  const acao = filaAcoes.shift() || ((s) => s);
-  const depoisAcao = acao(estado);
-  const novoEstado = atualizar(depoisAcao);
-  desenhar(ctx, novoEstado);
-  requestAnimationFrame(() => loop(novoEstado));
+  const acao = filaAcoes.shift() || ((s) => s)
+  const depoisAcao = acao(estado)
+  const novoEstado = atualizar(depoisAcao)
+  desenhar(ctx, novoEstado)
+  requestAnimationFrame(() => loop(novoEstado))
 }
 
 //EVENTO: só empilha ação
@@ -218,9 +218,9 @@ canvas.addEventListener("click", () => {
 // Adicionei essa função para que possa utilizar a tecla espaço para lançar a bola, problema o qual o orientador sugeriu para melhor eficácia
 document.addEventListener("keydown", (event) => {
   if (event.code === "Space") {
-    event.preventDefault();      // é para evitar que a página desça
+    event.preventDefault()       // é para evitar que a página desça
     if (!event.repeat) {         // deve evitar empilhar várias ações segurando o espaço
-      filaAcoes.push(lancar);
+      filaAcoes.push(lancar)
     }
   }
 })
